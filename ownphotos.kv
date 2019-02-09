@@ -1,0 +1,180 @@
+#:import Window kivy.core.window.Window
+ScreenManager:
+    id: screen_manager
+    #transition: FadeTransition()
+    ScreenOne:
+        id: menu_screen
+        name: 'ScreenOne'
+        manager: 'screen_manager'
+    ScreenAccounts:
+        id: ScreenAccounts
+        name: 'ScreenAccounts'
+        manager: 'screen_manager'
+
+<ScreenAccounts>
+    BoxLayout:
+        orientation: 'vertical'
+        AccountsNavigation:
+        ScrollView:
+            id: accounts_scroll
+            size_hint: (1, None)
+            #size: (Window.width, Window.height - 50)
+            Accounts:
+                id: accounts
+        Widget:
+
+<ScreenOne>
+    id: screen_one
+    GridLayout:
+        cols: 1
+        GalleryNavigation:
+        
+        ScrollView:
+            size_hint: (1, None)
+            size: (Window.width, Window.height)
+            Gallery:
+            
+<Gallery>
+    cols: 1
+    spacing: 1
+    size_hint_y: None
+    
+<Accounts>
+    orientation: 'vertical'
+    #cols: 1
+    #spacing: 1
+    #size_hint_y: None
+    
+<AccountsNavigation>
+    pos_hint: {'top':1}
+    ActionView:
+        use_separator: True
+        ActionPrevious:
+            title: 'Accounts'
+            with_previous: False
+        ActionOverflow:
+        ActionButton:
+            important: True
+            text: 'Gallery'
+            on_press:
+                app.root.transition.direction = 'right'
+                app.root.current = 'ScreenOne'
+        ActionButton:
+            text: 'new'
+            on_press: root.add_account()
+
+
+<GalleryNavigation>
+    pos_hint: {'top':1}
+    ActionView:
+        use_separator: True
+        ActionPrevious:
+            title: 'Gallery'
+            with_previous: False
+        ActionOverflow:
+        ActionButton:
+            icon: 'atlas://data/images/defaulttheme/audio-volume-high'
+        ActionButton:
+            important: True
+            text: 'accounts'
+            on_press:
+                app.root.transition.direction = 'left'
+                app.root.current = 'ScreenAccounts'
+                
+        ActionButton:
+            id: gallery_status
+            text: 'Btn2'
+            on_press: app.root.get_screen(app.root.current).do_print()
+        ActionButton:
+            text: 'Btn3'
+        ActionButton:
+            id: btn4
+            text: 'Btn4'
+        ActionGroup:
+            text: 'Group1'
+            ActionButton:
+                text: 'Btn5'
+            ActionButton:
+                text: 'Btn6'
+            ActionButton:
+
+                text: 'Btn7'
+
+
+
+
+<LoginDialog>:
+    title: 'LoginDialog'
+    size_hint: None, None
+    size: (Window.width, Window.height - 50)
+    auto_dismiss: False
+    url: url.text
+    username: username.text
+    password: password.text
+    lb_error: er
+
+    BoxLayout:
+        orientation: 'vertical'
+        pos: self.pos
+        size: root.size
+
+        BoxLayout:
+            orientation: 'vertical'
+            Label:
+                text: 'Enter Value'
+
+            TextInput:
+                id: url
+                multiline: False
+                hint_text:'Ownphotos URL'
+                on_text: root.error = ''
+            TextInput:
+                id: username
+                multiline: False
+                hint_text:'Username'
+                on_text: root.error = ''
+            TextInput:
+                id: password
+                multiline: False
+                hint_text:'password'
+                on_text: root.error = ''
+                password: True
+
+        BoxLayout:
+            orientation: 'horizontal'
+            Button:
+                text: 'Enter'
+                background_color: 255,0,0,0.9
+                on_press: root._enter()
+
+            Button:
+                text: 'Cancel'
+                background_color: 0,1,255,0.7
+                on_press: root._cancel()
+
+        Label:
+            id: er
+            foreground_color: 1, 250, 100, 1
+            color: 1, 0.67, 0, 1
+            size_hint_y: None
+            height: 0
+            text: root.error
+
+# Account entry in accounts screen
+[DataViewItem@BoxLayout]:
+    Button:
+        id: ctx.account_id
+        text: ctx.url
+        height: 40
+        size_hint_y: None
+        on_press: app.root.get_screen(app.root.current).select_account(ctx.account_id)
+    Label:
+        text: ctx.username
+        height: 40
+        size_hint_y: None
+
+<Message@Popup>:
+    auto_dismiss: False
+    Button:
+        text: "Please for new account to take effect"
+        on_release: root.dismiss()

@@ -1,0 +1,1 @@
+sudo docker exec -it -u 0 -w /buildozer buildozer-ownphotos buildozer android debug deploy run
